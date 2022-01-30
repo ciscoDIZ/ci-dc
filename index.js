@@ -5,10 +5,11 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-const {PORT, DB_URI, DB_USER, DB_PASSWORD, DB_NAME} = app.locals.config;
+let {PORT, DB_URI, DB_USER, DB_PASSWORD, DB_NAME} = app.locals.config;
 function throwError(err) {
     throw new Error(err)
 }
+PORT = (!PORT) ? 5000:PORT;
 mongoose.connect(DB_URI, {
     user: DB_USER,
     pass: DB_PASSWORD,
