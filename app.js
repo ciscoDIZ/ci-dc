@@ -2,7 +2,7 @@
 
 const express = require('express');
 const dotenv = require('dotenv');
-const morgan = require('morgan');
+//const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
 
@@ -13,7 +13,7 @@ app.set('env', SETTINGS.parsed.ENV);
 app.set('config', SETTINGS.parsed);
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(morgan('combined'));
+//app.use(morgan('combined'));
 app.use(cors());
 
 app.locals.env = app.get('env');
