@@ -1,26 +1,10 @@
 "use strict";
 const User = require('./models/user');
-const {GridFsStorage} = require('multer-gridfs-storage')
 const {decode} = require('./services/jwt');
-const multer = require("multer");
 
 const response = (res, status, send) => {
     res.status(status).send({message: send});
 }
-const storage = new GridFsStorage({
-    url: 'mongodb+srv://admin:Monst3r_Ripp3r_@app-data.kq6vy.mongodb.net/files?retryWrites=true&w=majority',
-    file: (req, file) => {
-        return new Promise((resolve, reject) => {
-            const fileName = file.originalname;
-            const fileInfo = {
-                fileName: fileName,
-                bucketName: 'filesBucket'
-            };
-            resolve(fileInfo);
-        });
-    }
-});
-const upload = multer({storage});
 
 const auth = async (req, res, next) => {
     const reqId = req.params.id;
@@ -55,5 +39,4 @@ const auth = async (req, res, next) => {
 
 module.exports = {
     auth,
-    upload
 }
