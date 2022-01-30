@@ -20,8 +20,8 @@ mongoose.connect(DB_URI, {
             throwError(error);
         }
         console.log('conexión base de datos ok');
-        app.listen(PORT,() => {
-            console.log(`Auth server listening at http://localhost:${PORT}`)
+        app.listen(5000,() => {
+            console.log(`Auth server listening at http://localhost:${5000}`)
         });
     }catch (e) {
         console.log(e)
