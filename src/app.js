@@ -8,7 +8,7 @@ const app = express();
 
 const SETTINGS = dotenv.config();
 
-app.disable('x-powered-by')
+app.disable('x-powered-by');
 app.set('env', SETTINGS.parsed.ENV);
 app.set('config', SETTINGS.parsed);
 app.use(express.json());

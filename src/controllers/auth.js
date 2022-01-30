@@ -1,14 +1,13 @@
 "use strict";
 
 const User = require('../models/user');
-const {badRequest, internalServerError} = require('../error');
-const bcrypt = require('bcrypt');
-const jwt = require('jwt-simple');
+const {badRequest, internalServerError, notFound} = require('../error');
+const bcrypt = require('bcryptjs');
+const {encode, decode} = require('../services/jwt');
 
 const login = async (req, res) => {
     const {payload} = req.body;
     console.log(payload)
-    const {API_SECRET} = req.app.locals.config;
     try {
         if(!payload) {
             res.status(400).send(badRequest('falta payload'));
@@ -21,19 +20,21 @@ const login = async (req, res) => {
             return
         }
         if (!user) {
-            res.status(400).send(badRequest('email incorrecto'));
+            res.status(400).send(badRequest('email o contraseña incorrectos'));
             return;
         }
         const {password} = user;
         const match = await bcrypt.compare(payload.password, password);
         if (!match) {
-            res.status(400).send(badRequest('password incorrecto.'));
+            res.status(400).send(badRequest('email o contraseña incorrectos'));
             return;
         }
         const {id} = user;
-        const update = await User.findByIdAndUpdate(id, {lastCacheAt: Date.now()}, {new: true});
+        const authenticatedUser = await User.findByIdAndUpdate(id, {lastCacheAt: Date.now()}, {new: true});
         payload.password = password
-        res.status(200).send({token: jwt.encode(payload, API_SECRET), authenticatedUser: update});
+        const token = encode(authenticatedUser, '12h')
+        console.log(token)
+        res.status(200).send({token, authenticatedUser});
     } catch (e) {
         res.status(500).send(internalServerError(e));
     }
@@ -44,19 +45,23 @@ const activate = async (req, res) => {
     const {API_SECRET} = req.app.locals.config;
     console.log(id, API_SECRET);
     try {
-        const user = await User.findByIdAndUpdate(id, {activated: true}, {new: true});
+        const user = await User.findByIdAndUpdate(
+            id,
+            {
+                activated: true,
+                lastCacheAt: Date.now()
+            },
+            {
+                new: true
+            }
+        );
         if (!user) {
-            res.status(404).send({message: 'usuario no encontrado'});
+            res.status(404).send(notFound("User", id));
             return;
         }
-        const {email, password} = user;
-        const payload = {
-            email,
-            password,
-        }
-        res.status(200).send({token: jwt.encode(payload, API_SECRET), activatedUser: user});
+        res.status(200).send({token: encode(user, '12h'), activatedUser: user});
     } catch (e) {
-        res.status(500).send({message: 'error interno'});
+        res.status(500).send(internalServerError(e));
     }
 }
 

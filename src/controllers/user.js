@@ -2,8 +2,20 @@
 
 const User = require('../models/user');
 const {notFound, internalServerError, badRequest} = require('../error');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
 
+const {DB_URI, DB_NAME, DB_USER, DB_PASSWORD} = process.env
+
+const connection = mongoose.createConnection(DB_URI, {
+    user: DB_USER,
+    pass: DB_PASSWORD,
+    dbName: 'files'
+})
+let gfs;
+connection.once('open', () => {
+    gfs = new mongoose.mongo.GridFSBucket(connection.db, {bucketName: 'files'})
+})
 
 const create = async (req, res) => {
     const {SALT_ROUND, SALT_MINOR} = req.app.locals.config
@@ -56,6 +68,7 @@ const findByEmail = async (req, res) => {
     }
 };
 const findAll = async (req, res) => {
+    console.log(gfs);
     const page = (!req.query.page) ? 1 : req.query.page;
     const limit = (!req.query.limit) ? 10 : req.query.limit;
     const custom = {

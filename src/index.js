@@ -9,7 +9,6 @@ const {PORT, DB_URI, DB_USER, DB_PASSWORD, DB_NAME} = app.locals.config;
 function throwError(err) {
     throw new Error(err)
 }
-
 mongoose.connect(DB_URI, {
     user: DB_USER,
     pass: DB_PASSWORD,
@@ -26,5 +25,5 @@ mongoose.connect(DB_URI, {
     }catch (e) {
         console.log(e)
     }
-})
+});
 
