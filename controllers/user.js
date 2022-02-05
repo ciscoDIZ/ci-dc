@@ -55,12 +55,26 @@ const findByEmail = async (req, res) => {
     }
 };
 const findAll = async (req, res) => {
-
-    const {name} = req.query;
+    const myCustomLabels = {
+        totalDocs: 'total',
+        docs: 'list',
+        nextPage: 'next',
+        prevPage: 'prev',
+        hasNextPage: 'hasNext',
+        hasPrevPage: 'hasPrev',
+        totalPages: 'pages',
+        meta: 'pagination',
+    }
+    const {name,limit,page} = req.query;
     const filter = (name) ? {name} : {};
-
+    const options = {
+        limit,
+        page,
+        customLabels: myCustomLabels
+    }
+    console.log(options)
     try {
-        const users = await User.find(filter,{});
+        const users = await User.paginate(filter,options);
         if (!users) {
             res.status(404).send(notFound('Users'));
             return;
