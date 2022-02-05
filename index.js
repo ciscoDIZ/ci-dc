@@ -5,11 +5,11 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
-let {PORT, DB_URI, DB_USER, DB_PASSWORD, DB_NAME} = app.locals.config;
+const {DB_URI, DB_USER, DB_PASSWORD, DB_NAME} = app.locals.config;
 function throwError(err) {
     throw new Error(err)
 }
-PORT = (!PORT) ? 5000:PORT;
+const PORT = process.env.PORT || 3977;
 mongoose.connect(DB_URI, {
     user: DB_USER,
     pass: DB_PASSWORD,
@@ -20,7 +20,7 @@ mongoose.connect(DB_URI, {
             throwError(error);
         }
         console.log('conexión base de datos ok');
-        app.listen(5000,() => {
+        app.listen(PORT,() => {
             console.log(`Auth server listening at http://localhost:${5000}`)
         });
     }catch (e) {
