@@ -21,7 +21,7 @@ mongoose.connect(DB_URI, {
         }
         console.log('conexión base de datos ok');
         app.listen(PORT,() => {
-            console.log(`Auth server listening at http://localhost:${5000}`)
+            console.log(`Auth server listening at http://localhost:${PORT}`)
         });
     }catch (e) {
         console.log(e)
