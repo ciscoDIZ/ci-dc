@@ -26,8 +26,9 @@ app.locals.config = app.get('config');
 const user_routes = require('./routes/user');
 const auth_routes = require('./routes/auth');
 
-app.use('/', (req, res) => res.render('home'))
+
 app.use('/api', user_routes);
 app.use('/api', auth_routes);
+app.use('/', (req, res) => res.render('home'))
 
 module.exports = app;
