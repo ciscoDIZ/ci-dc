@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "mocha ./test/server.test.js --exit"
+    "test": "mocha --exit"
   },
   "license": "MIT",
   "dependencies": {
