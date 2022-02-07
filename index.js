@@ -10,6 +10,7 @@ function throwError(err) {
     throw new Error(err)
 }
 const PORT = process.env.PORT || 3977;
+
 mongoose.connect(DB_URI, {
     user: DB_USER,
     pass: DB_PASSWORD,
@@ -20,8 +21,9 @@ mongoose.connect(DB_URI, {
             throwError(error);
         }
         console.log('conexión base de datos ok');
-        app.listen(PORT,() => {
-            console.log(`Auth server listening at http://localhost:${PORT}`)
+        const server = app.listen(PORT,() => {
+            console.log(server.address());
+            console.log(`Auth server listening at http://${server.address().address}:${PORT}`)
         });
     }catch (e) {
         console.log(e)

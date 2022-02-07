@@ -8,6 +8,16 @@
     "express",
     "heroku"
   ],
-  "image": "heroku/nodejs"
+  "image": "heroku/nodejs",
+  "environments": {
+    "test": {
+      "formation": {
+        "test": {
+          "quantity": 1,
+          "size": "standard-1x"
+        }
+      }
+    }
+  }
 
 }
